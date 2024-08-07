@@ -39,6 +39,44 @@
          - libapache2-mod-php
        state: latest
      when: ansible_distribution == "Ubuntu"
+
+   - name: copy default html file to apache default
+     tags: ubuntu_file
+     copy:
+       src: default.html
+       dest: /var/www/html/index.html
+       owner: ubuntu
+       group: ubuntu
+       mode: 0644
+     when: ansible_distribution == "Ubuntu"
+
+   - name: copy default html file to nginx default
+     tags: amazon_file
+     copy:
+       src: default.html
+       dest: /usr/share/nginx/html/index.html
+       owner: ec2-user
+       group: ec2-user
+       mode: 0644
+     when: ansible_distribution == "Amazon"
+
+   - name: Copy default html file to nginx default
+     tags: amazon_file
+     copy:
+       src: nginx.conf
+       dest: /etc/nginx/nginx.conf
+       owner: ec2-user
+       group: ec2-user
+       mode: 0644
+     when: ansible_distribution == "Amazon"
+     register: nginx_conf
+
+   - name: Restart nginx
+     tags: amazon_nginx_restart
+     service:
+       name: nginx
+       state: restarted
+     when: nginx_conf.changed
  
  - hosts: db_servers
    become: true
