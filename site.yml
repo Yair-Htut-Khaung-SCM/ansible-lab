@@ -1,0 +1,58 @@
+---
+ 
+ - hosts: all
+   become: true
+   pre_tasks:
+ 
+   - name: update repository index
+     yum:
+       name: '*'
+       state: latest
+     when: ansible_distribution == "Amazon"
+ 
+   - name: install updates (Ubuntu)
+     apt:
+       upgrade: dist
+       update_cache: yes
+     when: ansible_distribution == "Ubuntu"
+ 
+ 
+ - hosts: web_servers
+   become: true
+   tasks:
+ 
+   - name: install package
+     tags: amazon nginx, amazon php
+     yum:
+       name:
+         - nginx
+         - php
+       state: latest
+     when: ansible_distribution == "Amazon"
+
+ 
+   - name: install package (Ubuntu)
+     tags: ubuntu apache2, ubuntu php
+     apt:
+       name:
+         - apache2
+         - libapache2-mod-php
+       state: latest
+     when: ansible_distribution == "Ubuntu"
+ 
+ - hosts: db_servers
+   become: true
+   tasks:
+ 
+   - name: Install MariaDB server
+     yum:
+       name: mariadb-server
+       state: latest
+     when: ansible_distribution == "Amazon"
+ 
+   - name: install mariadb server
+     apt:
+       name: mariadb-server
+       state: latest
+     when: ansible_distribution == "Ubuntu"
+ 
