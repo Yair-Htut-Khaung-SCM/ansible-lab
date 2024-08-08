@@ -15,11 +15,16 @@
        upgrade: dist
        update_cache: yes
      when: ansible_distribution == "Ubuntu"
- 
- 
+
+
  - hosts: web_servers
    become: true
    tasks:
+
+   - name: Enable to install Nginx.
+     shell: "amazon-linux-extras enable nginx1"
+     become: yes
+     when: ansible_distribution == "Amazon"
  
    - name: install package
      tags: amazon nginx, amazon php
