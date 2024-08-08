@@ -1,0 +1,24 @@
+- name: Enable to install Nginx.
+  shell: "amazon-linux-extras enable nginx1"
+  become: yes
+
+- name: Install
+  yum:
+    name: nginx
+    state: present
+
+- name: Overwrite nginx.conf of the project
+  template:
+    src: nginx.j2
+    dest: /etc/nginx/nginx.conf
+    owner: root
+    group: root
+    mode: 0644
+    force: yes
+  notify: nginx_restart
+
+- name: Start nginx
+  service:
+    name: nginx
+    state: started
+    enabled: yes

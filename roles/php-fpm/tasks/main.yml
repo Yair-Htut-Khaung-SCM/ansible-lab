@@ -1,0 +1,45 @@
+- name: Enable to install PHP
+  shell: "amazon-linux-extras enable php8.0"
+
+- name: Install php library
+  yum:
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+      - php-mysqlnd
+      - php-mbstring
+      - libpng-devel
+      - libjpeg-devel
+      - freetype-devel
+      - php-gd
+      - php-bcmath
+      - php-ctype
+      - php-json
+      - php-mbstring
+      - php-openssl
+      - php-pdo
+      - php-tokenizer
+      - php-xml
+      - php-fpm
+      - php-cli
+      - php-opcache
+      - git
+      - gcc
+      - php-gd
+
+
+- name: Overwrite php.ini of the project
+  template:
+    src: php.ini.j2
+    dest: /etc/php.ini
+    owner: root
+    group: root
+    mode: 0644
+    force: yes
+
+- name: Start php-fpm
+  service:
+    name: php-fpm
+    state: started
+    enabled: yes

@@ -1,0 +1,9 @@
+- name: update all packages
+  yum:
+    name: '*'
+    state: latest
+    disable_gpg_check: yes
+
+- name: set timezone to Asia/Tokyo
+  timezone:
+    name: Asia/Tokyo

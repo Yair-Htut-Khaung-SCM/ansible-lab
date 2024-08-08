@@ -1,0 +1,10 @@
+---
+- hosts: localhost
+  become: yes
+  roles:
+    - role: init
+    - role: nginx
+    - role: php-fpm
+
+  vars_files:
+    - ./vars/dev/vars.yml
