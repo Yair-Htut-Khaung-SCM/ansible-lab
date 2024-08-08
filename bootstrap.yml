@@ -10,10 +10,24 @@
        state: latest
      when: ansible_distribution == "Amazon"
  
-   - name: install updates (Ubuntu)
-     apt:
-       upgrade: dist
-       update_cache: yes
-     when: ansible_distribution == "Ubuntu"
+   - name: create shino user
+     tags: always
+     user:
+       name: shino
+       groups: root
 
+   - name: add ssh key for shino
+     tags: always
+     authorized_key:
+       user: shino
+       key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMxKp+2TuYpK4NVIpYjUnoVpSWq2a8YhusU3Y4nCUeUb anisble
+
+   - name: add sudo access for shino
+     tags: always
+     copy:
+       src: sudoer_shino
+       dest: /etc/sudoers.d/shino
+       owner: root
+       group: root
+       mode: 0440
 
